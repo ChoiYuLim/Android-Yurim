@@ -20,6 +20,7 @@ class SignUpActivity : AppCompatActivity() {
                 val nextIntent = Intent(this,SignInActivity::class.java)
                 nextIntent.putExtra("id", binding.etId.text.toString())
                 nextIntent.putExtra("pw", binding.etPw.text.toString())
+                // setResult가 수행되는 순간, SignInActivity에서는 콜백함수 수행됨
                 setResult(RESULT_OK, nextIntent)
                 finish()
             }
