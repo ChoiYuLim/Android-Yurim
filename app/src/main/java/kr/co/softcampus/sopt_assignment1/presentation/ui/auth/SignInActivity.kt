@@ -4,19 +4,28 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kr.co.softcampus.sopt_assignment1.HomeActivity
 import kr.co.softcampus.sopt_assignment1.databinding.ActivitySignInBinding
+import kr.co.softcampus.sopt_assignment1.presentation.viewmodel.SignInViewModel
 
+@AndroidEntryPoint
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivitySignInBinding
+    private val signInViewModel by viewModels<SignInViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignInBinding.inflate(layoutInflater)
 
-        val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        binding.viewModel = signInViewModel
+        binding.lifecycleOwner = this
+
+        val activityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if(result.resultCode == RESULT_OK){
                     val id = result.data?.getStringExtra("id") ?: ""
                     val pw = result.data?.getStringExtra("pw") ?: ""
@@ -25,14 +34,10 @@ class SignInActivity : AppCompatActivity() {
                 }
             }
 
+        observeLogin()
+
         binding.btnLogin.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            if(binding.etId.length()!=0 && binding.etPw.length()!=0) {
-                Toast.makeText(this, binding.etId.text.toString()+"님 환영합니다", Toast.LENGTH_SHORT).show()
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
-            }
+            signInViewModel.checkSignInPermission()
         }
 
         binding.btnReg.setOnClickListener {
@@ -42,5 +47,20 @@ class SignInActivity : AppCompatActivity() {
         }
 
         setContentView(binding.root)
+    }
+
+    private fun observeLogin() {
+        signInViewModel.isSuccess.observe(this) {
+            when (it) {
+                true -> {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+                else -> {
+                    Toast.makeText(this, "다시 시도해주세요", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 }
