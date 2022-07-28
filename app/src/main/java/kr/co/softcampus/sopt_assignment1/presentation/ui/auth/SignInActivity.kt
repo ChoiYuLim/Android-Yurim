@@ -1,10 +1,11 @@
-package kr.co.softcampus.sopt_assignment1
+package kr.co.softcampus.sopt_assignment1.presentation.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import kr.co.softcampus.sopt_assignment1.HomeActivity
 import kr.co.softcampus.sopt_assignment1.databinding.ActivitySignInBinding
 
 class SignInActivity : AppCompatActivity() {

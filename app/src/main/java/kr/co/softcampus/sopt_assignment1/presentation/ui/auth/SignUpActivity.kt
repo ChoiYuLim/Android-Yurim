@@ -1,4 +1,4 @@
-package kr.co.softcampus.sopt_assignment1
+package kr.co.softcampus.sopt_assignment1.presentation.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,7 +17,7 @@ class SignUpActivity : AppCompatActivity() {
 
         binding.btnReg.setOnClickListener {
             if(binding.etId.length()!=0 && binding.etPw.length()!=0 && binding.etName.length()!=0) {
-                val nextIntent = Intent(this,SignInActivity::class.java)
+                val nextIntent = Intent(this, SignInActivity::class.java)
                 nextIntent.putExtra("id", binding.etId.text.toString())
                 nextIntent.putExtra("pw", binding.etPw.text.toString())
                 // setResult가 수행되는 순간, SignInActivity에서는 콜백함수 수행됨

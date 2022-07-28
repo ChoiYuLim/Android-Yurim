@@ -10,8 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SOPT_Assignment1">
         <activity android:name=".HomeActivity"></activity>
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".SignInActivity"
+        <activity android:name=".presentation.ui.auth.SignUpActivity" />
+        <activity android:name=".presentation.ui.auth.SignInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
