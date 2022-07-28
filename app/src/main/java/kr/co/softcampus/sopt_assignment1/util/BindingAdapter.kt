@@ -1,4 +1,4 @@
-package kr.co.softcampus.sopt_assignment1
+package kr.co.softcampus.sopt_assignment1.util
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
