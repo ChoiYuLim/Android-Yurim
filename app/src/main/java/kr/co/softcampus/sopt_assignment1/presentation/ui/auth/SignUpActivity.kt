@@ -3,33 +3,49 @@ package kr.co.softcampus.sopt_assignment1.presentation.ui.auth
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kr.co.softcampus.sopt_assignment1.databinding.ActivitySignUpBinding
+import kr.co.softcampus.sopt_assignment1.presentation.viewmodel.SignUpViewModel
 
+@AndroidEntryPoint
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
+    private val signUpViewModel by viewModels<SignUpViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivitySignUpBinding.inflate(layoutInflater)
+        binding.viewModel = signUpViewModel
+        binding.lifecycleOwner = this
 
+        observeSignUp()
         binding.btnReg.setOnClickListener {
-            if(binding.etId.length()!=0 && binding.etPw.length()!=0 && binding.etName.length()!=0) {
-                val nextIntent = Intent(this, SignInActivity::class.java)
-                nextIntent.putExtra("id", binding.etId.text.toString())
-                nextIntent.putExtra("pw", binding.etPw.text.toString())
-                // setResult가 수행되는 순간, SignInActivity에서는 콜백함수 수행됨
-                setResult(RESULT_OK, nextIntent)
-                finish()
-            }
-            else{
-                Toast.makeText(this, "입력되지 않은 정보가 있습니다", Toast.LENGTH_SHORT).show()
-            }
+            signUpViewModel.checkSignUpPermission()
         }
 
         setContentView(binding.root)
     }
 
+    private fun observeSignUp() {
+        signUpViewModel.isSuccess.observe(this) {
+            when (it) {
+                true -> {
+                    val intent = Intent(this, SignInActivity::class.java).apply {
+                        putExtra("userId", binding.etId.text.toString())
+                    }
+                    setResult(RESULT_OK, intent)
+                    if (!isFinishing) {
+                        finish()
+                    }
+                }
+                else -> {
+                    Toast.makeText(this, "다시 시도해주세요", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 }
